@@ -6,9 +6,47 @@ $(document).ready(function(){
 
 function addClickHandlers() {
   $('#submitBtn').on('click', handleSubmit);
-
+  $(`#bookShelf`).on(`click`, `.readBtn`, markAsRead)
+  $(`#bookShelf`).on(`click`, `.deleteBtn`, handleDelete)
   // TODO - Add code for edit & delete buttons
 }
+
+function handleDelete (){
+  let idToDelete = $(this).closest(`tr`).data(`id`);
+  console.log(idToDelete);
+
+  $.ajax({
+    method: `DELETE`,
+    url: `/books/${idToDelete}`
+  }).then(function (response) {
+    console.log(response);
+    refreshBooks();
+  }).catch(function (error) {
+    console.log(error);   
+  })
+};
+
+
+function markAsRead (){
+  console.log('clicked');
+  let read = $(this).text();
+  let id = $(this).closest(`tr`).data(`id`);
+
+  console.log(id, read);
+
+  $.ajax({
+    method: `PUT`,
+    url: `/books/${id},`
+    data: {
+      read: read
+    }
+  }).then(function (response) {
+    console.log(response);
+    refreshBooks();
+  }).catch(function (error) {
+    console.log(error);
+  })
+};
 
 function handleSubmit() {
   console.log('Submit button clicked.');
